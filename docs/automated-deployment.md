@@ -297,3 +297,5 @@ ssh -i ~/.ssh/hexo_github_actions deploy@你的服务器域名 \
 - 将真正的博客域名写入 Hexo `_config.yml` 的 `url`，避免 canonical URL 和分享链接错误。
 - 给 `main` 分支配置保护规则，让构建成功后才能合并。
 - 后续可增加 Markdown 链接检查、图片大小检查和 HTML 验证作为 CI 质量门禁。
+
+
