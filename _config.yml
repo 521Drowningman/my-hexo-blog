@@ -3,7 +3,7 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Hexo
+title: 白夜之门
 subtitle: ''
 description: ''
 keywords:
@@ -13,7 +13,7 @@ timezone: 'Asia/Shanghai'
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
-url: http://example.com
+url: https://zmwvic.top
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:
@@ -80,7 +80,7 @@ meta_generator: true
 date_format: YYYY-MM-DD
 time_format: HH:mm:ss
 ## updated_option supports 'mtime', 'date', 'empty'
-updated_option: 'mtime'
+updated_option: 'empty'
 
 # Pagination
 ## Set per_page to 0 to disable pagination
