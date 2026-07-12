@@ -298,4 +298,51 @@ ssh -i ~/.ssh/hexo_github_actions deploy@你的服务器域名 \
 - 给 `main` 分支配置保护规则，让构建成功后才能合并。
 - 后续可增加 Markdown 链接检查、图片大小检查和 HTML 验证作为 CI 质量门禁。
 
+## 十一、SSH 部署失败排查
+
+工作流中的 `exit code 255` 通常表示 SSH 或 SCP 在建立连接、验证服务器身份或认证用户时失败，不是 Hexo 构建失败。新版工作流把部署前检查拆成了两个独立步骤：
+
+1. `Test SSH connection`：只检查主机、端口、known_hosts、公私钥和用户名。
+2. `Validate remote deployment directory`：检查部署目录是否存在，以及 `deploy` 用户能否写入。
+
+根据日志中的第一条错误判断原因：
+
+| 日志 | 通常原因 | 检查方式 |
+| --- | --- | --- |
+| `Could not resolve hostname` | `PROD_SSH_HOST` 写错或包含 `https://` | Host 只填域名或 IP |
+| `Connection timed out` | 安全组、防火墙或端口未放行 | 检查阿里云安全组和宝塔防火墙 |
+| `Connection refused` | SSH 端口错误，或 sshd 没监听该端口 | 在服务器运行 `ss -lntp` |
+| `Host key verification failed` | `PROD_SSH_KNOWN_HOSTS` 与 Host/端口不匹配 | 重新核对主机指纹；非 22 端口必须保留 `[host]:port` 格式 |
+| `Permission denied (publickey)` | 私钥与服务器公钥不匹配，或 authorized_keys 权限错误 | 使用同一私钥在本地登录测试 |
+| `Deployment directory does not exist` | 服务器初始化目录未创建，或 Variable 路径错误 | 创建 `PROD_DEPLOY_BASE` 对应目录 |
+| `Deployment directory is not writable` | 目录不属于 `deploy` 用户 | 用 `chown` 修正所有者 |
+
+在服务器检查目录权限：
+
+```bash
+sudo chown -R deploy:deploy /www/wwwroot/hexo-blog-deploy
+sudo chmod 755 /www/wwwroot/hexo-blog-deploy
+sudo chmod 755 /www/wwwroot/hexo-blog-deploy/incoming
+sudo chmod 755 /www/wwwroot/hexo-blog-deploy/releases
+namei -l /www/wwwroot/hexo-blog-deploy
+```
+
+在本地使用与 GitHub 相同的身份测试：
+
+```bash
+ssh -v \
+  -i ~/.ssh/hexo_github_actions \
+  -p 你的SSH端口 \
+  -o IdentitiesOnly=yes \
+  deploy@你的服务器IP \
+  'whoami && test -w /www/wwwroot/hexo-blog-deploy'
+```
+
+成功时应输出：
+
+```text
+deploy
+```
+
+如果本地也失败，先修复服务器 SSH、公钥或目录权限；如果本地成功但 Actions 失败，重点核对 GitHub Secrets 中的 Host、端口、完整私钥和 known_hosts。
 

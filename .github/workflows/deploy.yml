@@ -24,10 +24,10 @@ jobs:
 
     steps:
       - name: Check out source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
@@ -44,7 +44,7 @@ jobs:
         run: test -f public/index.html
 
       - name: Upload immutable site artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: hexo-site-${{ github.sha }}
           path: public/
@@ -70,10 +70,10 @@ jobs:
 
     steps:
       - name: Check out deployment scripts
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Download built site
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: hexo-site-${{ github.sha }}
           path: site
@@ -111,6 +111,56 @@ jobs:
           printf '%s\n' "$SSH_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
           chmod 600 "$HOME/.ssh/deploy_key" "$HOME/.ssh/known_hosts"
 
+      - name: Test SSH connection
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          SSH_TARGET="${SSH_USER}@${SSH_HOST}"
+          ssh \
+            -v \
+            -i "$HOME/.ssh/deploy_key" \
+            -p "$SSH_PORT" \
+            -o BatchMode=yes \
+            -o ConnectTimeout=15 \
+            -o IdentitiesOnly=yes \
+            -o StrictHostKeyChecking=yes \
+            "$SSH_TARGET" \
+            'printf "SSH connection succeeded as %s\n" "$(whoami)"'
+
+      - name: Validate remote deployment directory
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          SSH_TARGET="${SSH_USER}@${SSH_HOST}"
+          SSH_ARGS=(
+            -i "$HOME/.ssh/deploy_key"
+            -p "$SSH_PORT"
+            -o BatchMode=yes
+            -o ConnectTimeout=15
+            -o IdentitiesOnly=yes
+            -o StrictHostKeyChecking=yes
+          )
+
+          ssh "${SSH_ARGS[@]}" "$SSH_TARGET" \
+            "bash -s -- '$DEPLOY_BASE'" <<'REMOTE_CHECK'
+          set -Eeuo pipefail
+          deploy_base=$1
+
+          if [[ ! -d "$deploy_base" ]]; then
+            echo "Deployment directory does not exist: $deploy_base" >&2
+            exit 1
+          fi
+          if [[ ! -w "$deploy_base" ]]; then
+            echo "Deployment directory is not writable by $(whoami): $deploy_base" >&2
+            exit 1
+          fi
+
+          mkdir -p "$deploy_base/incoming" "$deploy_base/releases"
+          test -w "$deploy_base/incoming"
+          test -w "$deploy_base/releases"
+          printf 'Remote deployment directory is ready: %s\n' "$deploy_base"
+          REMOTE_CHECK
+
       - name: Package and upload release
         shell: bash
         run: |
@@ -118,13 +168,6 @@ jobs:
           ARCHIVE="hexo-site-${GITHUB_SHA}.tar.gz"
           REMOTE_ARCHIVE="${DEPLOY_BASE}/incoming/${GITHUB_SHA}.tar.gz"
           SSH_TARGET="${SSH_USER}@${SSH_HOST}"
-          SSH_ARGS=(
-            -i "$HOME/.ssh/deploy_key"
-            -p "$SSH_PORT"
-            -o BatchMode=yes
-            -o IdentitiesOnly=yes
-            -o StrictHostKeyChecking=yes
-          )
           SCP_ARGS=(
             -i "$HOME/.ssh/deploy_key"
             -P "$SSH_PORT"
@@ -134,8 +177,6 @@ jobs:
           )
 
           tar -C site -czf "$ARCHIVE" .
-          ssh "${SSH_ARGS[@]}" "$SSH_TARGET" \
-            "mkdir -p -- '${DEPLOY_BASE}/incoming'"
           scp "${SCP_ARGS[@]}" "$ARCHIVE" \
             "${SSH_TARGET}:${REMOTE_ARCHIVE}"
 
