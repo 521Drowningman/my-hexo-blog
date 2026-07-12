@@ -1,0 +1,209 @@
+name: Build and deploy Hexo blog
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hexo-blog-production
+  cancel-in-progress: false
+
+env:
+  NODE_VERSION: '22'
+
+jobs:
+  build:
+    name: Build static site
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Generate Hexo site
+        run: |
+          npm run clean
+          npm run build
+
+      - name: Verify build output
+        run: test -f public/index.html
+
+      - name: Upload immutable site artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hexo-site-${{ github.sha }}
+          path: public/
+          if-no-files-found: error
+          include-hidden-files: true
+          retention-days: 7
+
+  deploy:
+    name: Deploy production release
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: production
+
+    env:
+      SSH_HOST: ${{ secrets.PROD_SSH_HOST }}
+      SSH_USER: ${{ secrets.PROD_SSH_USER }}
+      SSH_PORT: ${{ secrets.PROD_SSH_PORT }}
+      SSH_PRIVATE_KEY: ${{ secrets.PROD_SSH_PRIVATE_KEY }}
+      SSH_KNOWN_HOSTS: ${{ secrets.PROD_SSH_KNOWN_HOSTS }}
+      DEPLOY_BASE: ${{ vars.PROD_DEPLOY_BASE }}
+      HEALTHCHECK_URL: ${{ vars.PROD_HEALTHCHECK_URL }}
+
+    steps:
+      - name: Check out deployment scripts
+        uses: actions/checkout@v4
+
+      - name: Download built site
+        uses: actions/download-artifact@v4
+        with:
+          name: hexo-site-${{ github.sha }}
+          path: site
+
+      - name: Validate deployment configuration
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          : "${SSH_HOST:?Missing PROD_SSH_HOST secret}"
+          : "${SSH_USER:?Missing PROD_SSH_USER secret}"
+          : "${SSH_PRIVATE_KEY:?Missing PROD_SSH_PRIVATE_KEY secret}"
+          : "${SSH_KNOWN_HOSTS:?Missing PROD_SSH_KNOWN_HOSTS secret}"
+
+          SSH_PORT="${SSH_PORT:-22}"
+          DEPLOY_BASE="${DEPLOY_BASE:-/www/wwwroot/hexo-blog-deploy}"
+
+          [[ "$SSH_PORT" =~ ^[0-9]{1,5}$ ]] || {
+            echo "PROD_SSH_PORT must be a number" >&2
+            exit 1
+          }
+          [[ "$DEPLOY_BASE" =~ ^/[A-Za-z0-9._/-]+$ ]] || {
+            echo "PROD_DEPLOY_BASE must be an absolute path without spaces" >&2
+            exit 1
+          }
+
+          echo "SSH_PORT=$SSH_PORT" >> "$GITHUB_ENV"
+          echo "DEPLOY_BASE=$DEPLOY_BASE" >> "$GITHUB_ENV"
+
+      - name: Configure verified SSH access
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          install -d -m 700 "$HOME/.ssh"
+          printf '%s\n' "$SSH_PRIVATE_KEY" > "$HOME/.ssh/deploy_key"
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          chmod 600 "$HOME/.ssh/deploy_key" "$HOME/.ssh/known_hosts"
+
+      - name: Package and upload release
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          ARCHIVE="hexo-site-${GITHUB_SHA}.tar.gz"
+          REMOTE_ARCHIVE="${DEPLOY_BASE}/incoming/${GITHUB_SHA}.tar.gz"
+          SSH_TARGET="${SSH_USER}@${SSH_HOST}"
+          SSH_ARGS=(
+            -i "$HOME/.ssh/deploy_key"
+            -p "$SSH_PORT"
+            -o BatchMode=yes
+            -o IdentitiesOnly=yes
+            -o StrictHostKeyChecking=yes
+          )
+          SCP_ARGS=(
+            -i "$HOME/.ssh/deploy_key"
+            -P "$SSH_PORT"
+            -o BatchMode=yes
+            -o IdentitiesOnly=yes
+            -o StrictHostKeyChecking=yes
+          )
+
+          tar -C site -czf "$ARCHIVE" .
+          ssh "${SSH_ARGS[@]}" "$SSH_TARGET" \
+            "mkdir -p -- '${DEPLOY_BASE}/incoming'"
+          scp "${SCP_ARGS[@]}" "$ARCHIVE" \
+            "${SSH_TARGET}:${REMOTE_ARCHIVE}"
+
+      - name: Activate release atomically
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          REMOTE_ARCHIVE="${DEPLOY_BASE}/incoming/${GITHUB_SHA}.tar.gz"
+          SSH_TARGET="${SSH_USER}@${SSH_HOST}"
+          SSH_ARGS=(
+            -i "$HOME/.ssh/deploy_key"
+            -p "$SSH_PORT"
+            -o BatchMode=yes
+            -o IdentitiesOnly=yes
+            -o StrictHostKeyChecking=yes
+          )
+
+          ssh "${SSH_ARGS[@]}" "$SSH_TARGET" \
+            "bash -s -- '$DEPLOY_BASE' '$GITHUB_SHA' '$REMOTE_ARCHIVE'" \
+            < deploy/remote-deploy.sh
+
+      - name: Check public site and roll back on failure
+        if: ${{ vars.PROD_HEALTHCHECK_URL != '' }}
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          success=false
+
+          for attempt in 1 2 3 4 5 6; do
+            if curl --fail --silent --show-error \
+              --location --max-time 15 "$HEALTHCHECK_URL" > /dev/null; then
+              success=true
+              break
+            fi
+            echo "Health check attempt ${attempt}/6 failed"
+            sleep 5
+          done
+
+          if [[ "$success" != true ]]; then
+            SSH_TARGET="${SSH_USER}@${SSH_HOST}"
+            SSH_ARGS=(
+              -i "$HOME/.ssh/deploy_key"
+              -p "$SSH_PORT"
+              -o BatchMode=yes
+              -o IdentitiesOnly=yes
+              -o StrictHostKeyChecking=yes
+            )
+            ssh "${SSH_ARGS[@]}" "$SSH_TARGET" \
+              "bash -s -- '$DEPLOY_BASE'" \
+              < deploy/remote-rollback.sh
+            echo "Health check failed; the previous release was restored" >&2
+            exit 1
+          fi
+
+      - name: Write deployment summary
+        shell: bash
+        run: |
+          {
+            echo "### Production deployment"
+            echo "- Commit: \`${GITHUB_SHA}\`"
+            echo "- Release: \`${DEPLOY_BASE}/releases/${GITHUB_SHA}\`"
+            if [[ -n "$HEALTHCHECK_URL" ]]; then
+              echo "- Health check: ${HEALTHCHECK_URL}"
+            else
+              echo "- Health check: not configured"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Remove temporary SSH key
+        if: always()
+        run: rm -f "$HOME/.ssh/deploy_key"
