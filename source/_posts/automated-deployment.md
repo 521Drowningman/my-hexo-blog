@@ -1,8 +1,16 @@
 ---
 title: Hexo 博客自动化部署
+date: 2026-07-20 00:00:00
+updated: 2026-07-25 00:00:00
+description: 从 GitHub Actions 构建 Hexo，到服务器原子发布、健康检查和失败回滚的完整实践。
+categories:
+  - 网站运维
+tags:
+  - Hexo
+  - GitHub Actions
+  - 自动部署
+  - SSH
 ---
-
-# Hexo 博客自动化部署指南
 
 本文把“Git 流水线与生产部署实践”转换成适合本项目的自动部署流程。
 
@@ -349,4 +357,3 @@ deploy
 ```
 
 如果本地也失败，先修复服务器 SSH、公钥或目录权限；如果本地成功但 Actions 失败，重点核对 GitHub Secrets 中的 Host、端口、完整私钥和 known_hosts。
-
