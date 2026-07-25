@@ -4,9 +4,9 @@
 
 # Site
 title: 白夜之门
-subtitle: '记录开发、部署与一路踩过的坑'
-description: '白夜之门是 CHZZZ 的个人技术博客，记录开发、部署和技术学习。'
-keywords: Hexo, Web, DevOps, GitHub Actions, 个人博客
+subtitle: '把折腾、生活和偶然发现都留在这里'
+description: '白夜之门是 CHZZZ 的个人博客，记录搭建、学习、生活和一路遇见的新鲜事。'
+keywords: Hexo, Web, DevOps, GitHub Actions, 个人博客, 学习记录
 author: CHZZZ
 language: zh-CN
 timezone: 'Asia/Shanghai'

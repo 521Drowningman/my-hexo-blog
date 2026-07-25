@@ -1,0 +1,25 @@
+Image sources
+=============
+
+The source photography in this directory is sourced from Pexels and used under
+the Pexels license. The `*-anime-local.webp` files are local, non-destructive
+cel-shaded derivatives generated from those source files for this site.
+
+- hero-architecture.webp and hero-architecture-mobile.webp
+  Photo by Jan van der Wolf
+  https://www.pexels.com/photo/colorful-geometric-building-on-blue-sky-10698269/
+- cover-automation.webp
+  Photo by Enam Sape
+  https://www.pexels.com/photo/colorful-modern-architectural-facade-design-33357993/
+- cover-deployment.webp
+  Photo by NorrieXF
+  https://www.pexels.com/photo/facade-of-a-colorful-building-9359216/
+- cover-default.webp
+  Photo by Jan van der Wolf
+  https://www.pexels.com/photo/colorful-urban-building-19263015/
+
+- hero-lyjpmr.webp and hero-lyjpmr-mobile.webp
+  Optimized derivatives of the image linked below.
+  Wallhaven page: https://wallhaven.cc/w/lyjpmr
+  Original artist/source: https://www.pixiv.net/en/users/67750556
+  Copyright remains with the original artist.

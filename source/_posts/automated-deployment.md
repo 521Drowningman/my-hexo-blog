@@ -10,6 +10,8 @@ tags:
   - GitHub Actions
   - 自动部署
   - SSH
+cover: /img/editorial/cover-automation-anime-local.webp
+top_img: /img/editorial/cover-automation-anime-local.webp
 ---
 
 本文把“Git 流水线与生产部署实践”转换成适合本项目的自动部署流程。

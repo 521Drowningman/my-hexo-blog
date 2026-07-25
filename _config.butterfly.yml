@@ -66,16 +66,16 @@ avatar:
 disable_top_img: false
 
 # If the banner of page not setting, it will show the default_top_img
-default_top_img:
+default_top_img: /img/editorial/hero-lyjpmr.webp
 
 # The banner image of index page
-index_img:
+index_img: /img/editorial/hero-lyjpmr.webp
 
 # The banner image of archive page
-archive_img:
+archive_img: /img/editorial/cover-default-anime-local.webp
 
 # Note: tag page, not tags page
-tag_img:
+tag_img: /img/editorial/cover-release-anime-local.webp
 
 # The banner image of tag page, you can set the banner image for each tag
 # Format:
@@ -83,7 +83,7 @@ tag_img:
 tag_per_img:
 
 # Note: category page, not categories page
-category_img:
+category_img: /img/editorial/cover-automation-anime-local.webp
 
 # The banner image of category page, you can set the banner image for each category
 # Format:
@@ -96,7 +96,7 @@ footer_img: false
 # Website Background
 # Can set it to color, image URL or an array containing colors and/or image URLs
 # If an array is provided, a random background will be selected from the array on each load
-background:
+background: /img/editorial/hero-lyjpmr.webp
 
 cover:
   # Disable the cover or not
@@ -105,7 +105,9 @@ cover:
   archives_enable: true
   # When cover is not set, the default cover is displayed
   default_cover:
-    # - xxx.jpg
+    - /img/editorial/cover-default-anime-local.webp
+    - /img/editorial/cover-release-anime-local.webp
+    - /img/editorial/cover-automation-anime-local.webp
 
 # Replace Broken Images
 error_img:
@@ -146,18 +148,25 @@ post_meta:
 # The top_img settings of home page
 # default: top img - full screen, site info - middle
 # The position of site info, eg: 300px/300em/300rem/10%
-index_site_info_top: 42%
+index_site_info_top: 48%
 # The height of top_img, eg: 300px/300em/300rem
-index_top_img_height: 70vh
+index_top_img_height: 78vh
 
 # The subtitle on homepage
 subtitle:
   enable: true
   # Typewriter Effect
-  effect: false
+  effect: true
   # Customize typed.js
   # https://github.com/mattboldt/typed.js/#customization
   typed_option:
+    typeSpeed: 85
+    backSpeed: 35
+    startDelay: 500
+    backDelay: 2200
+    loop: true
+    showCursor: true
+    cursorChar: '|'
   # Source - Call the third-party service API (Chinese only)
   # It will show the source first, then show the content of sub
   # Choose: false/1/2/3
@@ -168,7 +177,9 @@ subtitle:
   source: false
   # If you close the typewriter effect, the subtitle will only show the first line of sub
   sub:
-    - 记录开发、部署与一路踩过的坑
+    - 把折腾、生活和偶然发现都留在这里
+    - 写下正在学习的，也写下不想忘记的
+    - 偶尔绕路，但一直向前
 
 # Article layout on the homepage
 # 1: Cover on the left, info on the right
@@ -178,7 +189,7 @@ subtitle:
 # 5: Info displayed on the cover
 # 6: Masonry layout - Cover on top, info on the bottom
 # 7: Masonry layout - Info displayed on the cover
-index_layout: 3
+index_layout: 5
 
 # Display the article introduction on homepage
 # 1: description
@@ -266,8 +277,8 @@ footer:
     since: 2025
   # Copyright of theme and framework
   copyright:
-    enable: true
-    version: true
+    enable: false
+    version: false
   custom_text: <a href="https://beian.miit.gov.cn/"
                   target="_blank"
                   rel="noopener noreferrer">
@@ -291,7 +302,7 @@ aside:
     tag: true
     category: true
   card_author:
-    enable: true
+    enable: false
     description: 记录开发、部署和技术学习
     button:
       enable: false
@@ -299,10 +310,10 @@ aside:
       text: GitHub
       link:
   card_announcement:
-    enable: true
+    enable: false
     content: 欢迎来到白夜之门
   card_recent_post:
-    enable: true
+    enable: false
     # If set 0 will show all
     limit: 5
     # Sort: date / updated
@@ -316,14 +327,14 @@ aside:
     storage: 10
     avatar: true
   card_categories:
-    enable: true
+    enable: false
     # If set 0 will show all
     limit: 8
     # Choose: none / true / false
     expand: none
     sort_order:
   card_tags:
-    enable: true
+    enable: false
     # If set 0 will show all
     limit: 40
     color: false
@@ -334,7 +345,7 @@ aside:
     order: 1
     sort_order:
   card_archives:
-    enable: true
+    enable: false
     # Type: monthly / yearly
     type: monthly
     # Eg: YYYY年MM月
@@ -353,7 +364,7 @@ aside:
     # Sort of order. 1, asc for ascending; -1, desc for descending
     order: -1
   card_webinfo:
-    enable: true
+    enable: false
     post_count: true
     last_push_date: true
     sort_order:
@@ -447,9 +458,9 @@ wordcount:
 
 # Busuanzi count for PV / UV in site
 busuanzi:
-  site_uv: true
-  site_pv: true
-  page_pv: true
+  site_uv: false
+  site_pv: false
+  page_pv: false
 
 # --------------------------------------
 # Math
@@ -766,21 +777,21 @@ site_verification:
 
 theme_color:
   enable: true
-  main: "#315A75"
-  paginator: "#D89B3C"
-  button_hover: "#B7791F"
-  text_selection: "#D89B3C"
-  link_color: "#35698A"
-  meta_color: "#76808A"
-  hr_color: "#DCE2E7"
-  code_foreground: "#B45309"
-  code_background: "rgba(31, 41, 51, .06)"
-  toc_color: "#315A75"
-  blockquote_padding_color: "#D89B3C"
-  blockquote_background_color: "#F7F3EA"
-  scrollbar_color: "#315A75"
-  meta_theme_color_light: "#F5F7F8"
-  meta_theme_color_dark: "#12171D"
+  main: "#1542D4"
+  paginator: "#FFD447"
+  button_hover: "#FF5A4F"
+  text_selection: "#FFD447"
+  link_color: "#1542D4"
+  meta_color: "#69707A"
+  hr_color: "#D8DCE2"
+  code_foreground: "#E34942"
+  code_background: "rgba(21, 66, 212, .07)"
+  toc_color: "#1542D4"
+  blockquote_padding_color: "#FF5A4F"
+  blockquote_background_color: "#FFF1ED"
+  scrollbar_color: "#1542D4"
+  meta_theme_color_light: "#F3F4F6"
+  meta_theme_color_dark: "#111318"
 
 # The user interface setting of category and tag page
 # Choose: index - same as Homepage UI / default - same as archives UI
@@ -796,7 +807,7 @@ text_align_justify: false
 
 # Add a mask to the header and footer
 mask:
-  header: true
+  header: false
   footer: true
 
 # Loading Animation
