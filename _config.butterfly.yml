@@ -59,7 +59,7 @@ social:
 favicon: /img/favicon.ico
 
 avatar:
-  img: /img/butterfly-icon.png
+  img: /img/editorial/avatar-lyjpmr.webp
   effect: false
 
 # Disable all banner images
@@ -96,7 +96,7 @@ footer_img: false
 # Website Background
 # Can set it to color, image URL or an array containing colors and/or image URLs
 # If an array is provided, a random background will be selected from the array on each load
-background: /img/editorial/hero-lyjpmr.webp
+background:
 
 cover:
   # Disable the cover or not
@@ -294,7 +294,7 @@ aside:
   hide: false
   # Show the button to hide the aside in bottom right button
   button: true
-  mobile: false
+  mobile: true
   # Position: left / right
   position: right
   display:
@@ -302,8 +302,8 @@ aside:
     tag: true
     category: true
   card_author:
-    enable: false
-    description: 记录开发、部署和技术学习
+    enable: true
+    description: 在这里记录学习、折腾、生活与偶然发现。
     button:
       enable: false
       icon: fab fa-github

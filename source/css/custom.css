@@ -1,20 +1,24 @@
 :root {
-  --editorial-ink: #17191f;
-  --editorial-paper: #f3f4f6;
+  --editorial-ink: #202226;
+  --editorial-paper: #f6f7f5;
   --editorial-surface: #ffffff;
-  --editorial-blue: #1542d4;
-  --editorial-red: #ff5a4f;
-  --editorial-yellow: #ffd447;
-  --editorial-mint: #73d8c5;
-  --editorial-muted: #68707b;
-  --editorial-line: rgba(23, 25, 31, 0.14);
-  --editorial-shadow: 0 18px 45px rgba(23, 25, 31, 0.12);
+  --editorial-blue: #315b8a;
+  --editorial-red: #d94f3d;
+  --editorial-yellow: #ddb94f;
+  --editorial-mint: #8da99f;
+  --editorial-muted: #6d737b;
+  --editorial-line: rgba(32, 34, 38, 0.13);
+  --editorial-shadow: 0 16px 40px rgba(32, 34, 38, 0.1);
   --global-bg: var(--editorial-paper);
   --card-bg: var(--editorial-surface);
   --font-color: #3e4650;
   --text-highlight-color: var(--editorial-ink);
   --card-box-shadow: none;
   --card-hover-box-shadow: none;
+  --btn-bg: var(--editorial-ink);
+  --btn-hover-color: var(--editorial-red);
+  --text-bg-hover: rgba(217, 79, 61, 0.14);
+  --scrollbar-color: var(--editorial-red);
 }
 
 [data-theme='dark'] {
@@ -29,28 +33,18 @@
   --font-color: #c8cbd1;
   --text-highlight-color: var(--editorial-ink);
   --blockquote-bg: rgba(255, 90, 79, 0.12);
+  --btn-bg: #2a2d33;
+  --btn-hover-color: #e3685b;
 }
 
 html,
 body {
+  background: var(--editorial-paper);
   overflow-x: hidden;
 }
 
-html {
-  background: var(--editorial-paper);
-}
-
 body {
-  background: transparent;
   letter-spacing: 0;
-}
-
-#web_bg {
-  background-position: center center;
-}
-
-body:not(:has(#page-header.full_page)) #web_bg {
-  display: none;
 }
 
 h1,
@@ -127,11 +121,12 @@ h6,
 
 /* Home hero */
 #page-header.full_page {
-  min-height: 620px;
-  max-height: 860px;
-  background-color: transparent;
-  background-image: none !important;
-  border-bottom: 8px solid var(--editorial-yellow);
+  height: clamp(600px, 72svh, 740px) !important;
+  min-height: 600px;
+  max-height: 740px;
+  background-attachment: scroll;
+  background-position: center center;
+  border-bottom: 3px solid var(--editorial-yellow);
 }
 
 #page-header.full_page::before {
@@ -140,17 +135,17 @@ h6,
 
 #page-header.full_page #site-info {
   top: auto;
-  bottom: 13%;
-  left: 7%;
+  bottom: 11%;
+  left: max(32px, calc((100vw - 1240px) / 2));
   padding: 0;
-  width: 44%;
+  width: min(620px, 48vw);
   animation: editorial-hero-in 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
 #page-header.full_page #site-info::before {
   display: inline-block;
-  margin-bottom: 18px;
-  padding: 8px 12px;
+  margin-bottom: 16px;
+  padding: 7px 11px;
   background: var(--editorial-yellow);
   color: #17191f;
   content: 'CHZZZ / PERSONAL JOURNAL';
@@ -162,22 +157,22 @@ h6,
 #page-header.full_page #site-title {
   overflow: visible;
   margin: 0;
-  color: #17191f;
+  color: #ffffff;
   text-align: left;
-  text-shadow: none;
-  font-size: 6rem;
+  text-shadow: 0 3px 18px rgba(0, 0, 0, 0.58);
+  font-size: 5.2rem;
   font-weight: 900;
   line-height: 1.02;
   -webkit-line-clamp: unset;
 }
 
 #page-header.full_page #site-subtitle {
-  margin-top: 22px;
-  color: #17191f;
+  margin-top: 16px;
+  color: #ffffff;
   text-align: left;
-  text-shadow: none;
-  font-size: 1.28rem;
-  font-weight: 700;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.58);
+  font-size: 1.12rem;
+  font-weight: 600;
   line-height: 1.6;
 }
 
@@ -186,16 +181,17 @@ h6,
   bottom: 28px;
   left: auto;
   display: grid;
-  width: 50px;
-  height: 50px;
+  width: 46px;
+  height: 46px;
   place-items: center;
   border-radius: 50%;
-  background: var(--editorial-red);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 8px 24px rgba(12, 14, 18, 0.16);
 }
 
 #page-header.full_page #scroll-down .scroll-down-effects {
   width: auto;
-  color: #ffffff;
+  color: #202226;
   font-size: 20px;
 }
 
@@ -213,64 +209,132 @@ h6,
 
 /* Home magazine grid */
 #page-header.full_page + #content-inner {
-  display: block;
-  padding: 0 28px 90px;
-  max-width: none;
-  width: 100%;
-  background: linear-gradient(
-    180deg,
-    rgba(243, 244, 246, 0.22) 0%,
-    rgba(243, 244, 246, 0.38) 62%,
-    rgba(243, 244, 246, 0.62) 100%
-  );
-  backdrop-filter: blur(1.5px);
+  display: grid;
+  grid-template-areas: 'posts profile';
+  grid-template-columns: minmax(0, 1fr) 300px;
+  align-items: start;
+  gap: 40px;
+  padding: 56px 32px 96px;
+  max-width: 1280px;
 }
 
 #page-header.full_page + #content-inner::before {
-  display: block;
-  margin: 0 calc(50% - 50vw) 70px;
-  padding: 17px 4vw;
-  width: 100vw;
-  border-bottom: 1px solid #17191f;
-  background: rgba(255, 212, 71, 0.9);
-  backdrop-filter: blur(10px);
-  color: #17191f;
-  content: '折腾　记录　上线　重来　继续';
-  text-align: center;
-  font-size: 0.9rem;
-  font-weight: 900;
-  word-spacing: 2.4rem;
-}
-
-#page-header.full_page + #content-inner > #aside-content {
   display: none;
 }
 
-#recent-posts {
-  margin: 0 auto;
-  max-width: 1284px;
+#page-header.full_page + #content-inner > #aside-content {
+  grid-area: profile;
+  display: block;
+  padding: 70px 0 0;
   width: 100%;
 }
 
-#recent-posts::before {
-  display: table;
-  margin: 0 0 26px;
-  padding: 11px 16px;
-  border-left: 6px solid var(--editorial-yellow);
-  background: rgba(255, 255, 255, 0.82);
-  box-shadow: 0 12px 30px rgba(23, 25, 31, 0.1);
-  backdrop-filter: blur(14px) saturate(1.2);
-  color: #17191f;
-  content: '最近发布';
-  font-size: 1.35rem;
+#recent-posts {
+  grid-area: posts;
+  width: 100%;
+}
+
+#page-header.full_page + #content-inner #aside-content .card-info {
+  position: sticky;
+  top: 84px;
+  display: grid;
+  grid-template-areas:
+    'avatar name'
+    'avatar description'
+    'stats stats';
+  grid-template-columns: 72px minmax(0, 1fr);
+  column-gap: 18px;
+  margin: 0;
+  padding: 20px 0 0;
+  border: 0;
+  border-top: 2px solid var(--editorial-ink);
+  border-bottom: 1px solid var(--editorial-line);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--editorial-ink);
+  text-align: left;
+}
+
+#page-header.full_page + #content-inner #aside-content .avatar-img {
+  grid-area: avatar;
+  align-self: start;
+  margin: 0;
+  width: 72px;
+  height: 72px;
+  border: 2px solid var(--editorial-surface);
+  box-shadow: 0 0 0 1px var(--editorial-line);
+}
+
+#page-header.full_page + #content-inner #aside-content .avatar-img img {
+  transition: transform 0.65s cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+
+#page-header.full_page + #content-inner #aside-content .avatar-img img:hover {
+  transform: rotate(360deg) scale(1.04);
+}
+
+#page-header.full_page + #content-inner #aside-content .author-info-name {
+  grid-area: name;
+  align-self: end;
+  margin-top: 0;
+  color: var(--editorial-ink);
+  font-size: 1.28rem;
   font-weight: 900;
   line-height: 1.2;
+}
+
+#page-header.full_page + #content-inner #aside-content .author-info-description {
+  grid-area: description;
+  align-self: start;
+  margin: 5px 0 0;
+  max-width: none;
+  color: var(--editorial-muted);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+#page-header.full_page + #content-inner #aside-content .site-data {
+  grid-area: stats;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 20px 0 0;
+  padding: 15px 0 17px;
+  width: 100%;
+  border-top: 1px solid var(--editorial-line);
+}
+
+#page-header.full_page + #content-inner #aside-content .site-data .headline {
+  color: var(--editorial-muted);
+  font-size: 0.72rem;
+}
+
+#page-header.full_page + #content-inner #aside-content .site-data .length-num {
+  margin-top: 2px;
+  color: var(--editorial-ink);
+  font-size: 1.08rem;
+  font-weight: 900;
+}
+
+#page-header.full_page + #content-inner #aside-content .site-data a:hover .headline,
+#page-header.full_page + #content-inner #aside-content .site-data a:hover .length-num {
+  color: var(--editorial-yellow) !important;
+}
+
+#recent-posts::before {
+  display: block;
+  margin: 0 0 24px;
+  color: var(--editorial-ink);
+  content: '最近发布';
+  font-size: 1.95rem;
+  font-weight: 900;
+  line-height: 1.3;
 }
 
 #recent-posts .recent-post-items {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: 24px;
+  gap: 20px;
 }
 
 #recent-posts .recent-post-items > .recent-post-item {
@@ -278,11 +342,11 @@ h6,
   grid-column: span 6;
   overflow: hidden;
   margin: 0;
-  height: 520px;
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  border-radius: 6px;
+  height: 440px;
+  border: 1px solid var(--editorial-line);
+  border-radius: 4px;
   background: #17191f;
-  box-shadow: var(--editorial-shadow);
+  box-shadow: 0 12px 32px rgba(32, 34, 38, 0.08);
   transition: transform 0.35s cubic-bezier(0.2, 0.75, 0.25, 1), box-shadow 0.35s ease;
 }
 
@@ -295,8 +359,8 @@ h6,
 }
 
 #recent-posts .recent-post-items > .recent-post-item:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 24px 58px rgba(23, 25, 31, 0.2);
+  transform: translateY(-3px);
+  box-shadow: 0 18px 42px rgba(32, 34, 38, 0.14);
 }
 
 #recent-posts .recent-post-item::after {
@@ -305,8 +369,8 @@ h6,
   right: 22px;
   z-index: 4;
   display: grid;
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   place-items: center;
   background: var(--editorial-yellow);
   color: #17191f;
@@ -322,8 +386,8 @@ h6,
 }
 
 #recent-posts .recent-post-item:nth-child(n + 3)::after {
-  background: var(--editorial-mint);
-  color: #17191f;
+  background: rgba(255, 255, 255, 0.9);
+  color: #202226;
   content: 'NEW';
 }
 
@@ -336,7 +400,7 @@ h6,
 
 #recent-posts .recent-post-item .post_cover::before {
   z-index: 1;
-  background: rgba(10, 12, 16, 0.34);
+  background: linear-gradient(180deg, rgba(10, 12, 16, 0.08) 25%, rgba(10, 12, 16, 0.84) 100%);
   backdrop-filter: none;
 }
 
@@ -364,7 +428,7 @@ h6,
   top: auto;
   bottom: 0;
   z-index: 3;
-  padding: 42px;
+  padding: 30px;
   width: 100%;
   color: #ffffff;
   transform: none;
@@ -376,14 +440,14 @@ h6,
   display: block;
   max-width: 90%;
   color: #ffffff;
-  font-size: 2rem;
+  font-size: 1.58rem;
   font-weight: 900;
   line-height: 1.25;
 }
 
 #recent-posts .recent-post-item:first-child > .recent-post-info > .article-title {
-  max-width: 80%;
-  font-size: 2.55rem;
+  max-width: 84%;
+  font-size: 2rem;
 }
 
 #recent-posts .recent-post-item > .recent-post-info > .article-title:hover {
@@ -401,11 +465,11 @@ h6,
 }
 
 #recent-posts .recent-post-item > .recent-post-info > .content {
-  margin-top: 16px;
+  margin-top: 13px;
   max-width: 660px;
   color: rgba(255, 255, 255, 0.88);
-  font-size: 0.98rem;
-  line-height: 1.75;
+  font-size: 0.9rem;
+  line-height: 1.65;
 }
 
 #recent-posts .pagination {
@@ -449,7 +513,7 @@ h6,
   max-width: 1180px;
 }
 
-#body-wrap.page #content-inner > #aside-content {
+#body-wrap.page #page-header.not-home-page + #content-inner > #aside-content {
   display: none;
 }
 
@@ -630,42 +694,75 @@ h6,
   border-bottom-color: var(--editorial-red);
 }
 
-[data-theme='dark'] #page-header.full_page + #content-inner::before {
-  border-bottom-color: #111318;
-}
-
-[data-theme='dark'] #page-header.full_page + #content-inner {
-  background: linear-gradient(
-    180deg,
-    rgba(17, 19, 24, 0.2) 0%,
-    rgba(17, 19, 24, 0.42) 62%,
-    rgba(17, 19, 24, 0.68) 100%
-  );
-}
-
-[data-theme='dark'] #recent-posts::before {
-  border-left-color: var(--editorial-red);
-  background: rgba(25, 28, 34, 0.84);
-  color: #ffffff;
-}
-
 /* Responsive */
 @media screen and (max-width: 1100px) {
+  #page-header.full_page + #content-inner {
+    grid-template-areas:
+      'posts'
+      'profile';
+    grid-template-columns: minmax(0, 1fr);
+    gap: 42px;
+  }
+
+  #page-header.full_page + #content-inner > #aside-content {
+    padding-top: 0;
+  }
+
+  #page-header.full_page + #content-inner #aside-content .card-info {
+    position: static;
+    display: grid;
+    grid-template-areas:
+      'avatar name stats'
+      'avatar description stats';
+    grid-template-columns: 72px minmax(0, 1fr) 270px;
+    column-gap: 18px;
+    padding: 20px 0;
+    text-align: left;
+  }
+
+  #page-header.full_page + #content-inner #aside-content .avatar-img {
+    grid-area: avatar;
+    align-self: center;
+    width: 72px;
+    height: 72px;
+  }
+
+  #page-header.full_page + #content-inner #aside-content .author-info-name {
+    grid-area: name;
+    align-self: end;
+    margin-top: 0;
+  }
+
+  #page-header.full_page + #content-inner #aside-content .author-info-description {
+    grid-area: description;
+    margin: 3px 0 0;
+    max-width: none;
+  }
+
+  #page-header.full_page + #content-inner #aside-content .site-data {
+    grid-area: stats;
+    align-self: stretch;
+    margin: 0;
+    padding: 10px 0 10px 24px;
+    border-top: 0;
+    border-left: 1px solid var(--editorial-line);
+  }
+
   #page-header.full_page #site-info {
     left: 5%;
     width: 54%;
   }
 
   #page-header.full_page #site-title {
-    font-size: 4.8rem;
+    font-size: 4.5rem;
   }
 
   #recent-posts .recent-post-items > .recent-post-item {
-    height: 470px;
+    height: 460px;
   }
 
   #recent-posts .recent-post-item > .recent-post-info {
-    padding: 34px;
+    padding: 30px;
   }
 
   #page-header.post-bg #post-info .post-title {
@@ -698,19 +795,17 @@ h6,
   }
 
   #page-header.full_page {
+    height: clamp(560px, 72svh, 620px) !important;
     min-height: 560px;
-    height: 72vh;
-    border-bottom-width: 6px;
-  }
-
-  #web_bg {
+    max-height: 620px;
     background-image: url('/img/editorial/hero-lyjpmr-mobile.webp') !important;
     background-position: center center;
+    border-bottom-width: 4px;
   }
 
   #page-header.full_page #site-info {
     right: 22px;
-    bottom: 12%;
+    bottom: 11%;
     left: 22px;
     width: auto;
   }
@@ -723,7 +818,7 @@ h6,
   #page-header.full_page #site-title {
     color: #ffffff;
     text-shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
-    font-size: 3.5rem;
+    font-size: 3rem;
   }
 
   #page-header.full_page #site-subtitle {
@@ -742,20 +837,50 @@ h6,
   }
 
   #page-header.full_page + #content-inner {
-    padding: 0 16px 70px;
+    gap: 38px;
+    padding: 40px 16px 68px;
   }
 
-  #page-header.full_page + #content-inner::before {
-    margin-bottom: 48px;
-    padding: 14px 10px;
-    font-size: 0.78rem;
-    word-spacing: 0.45rem;
+  #page-header.full_page + #content-inner #aside-content .card-info {
+    display: grid;
+    grid-template-areas:
+      'avatar name'
+      'avatar description'
+      'stats stats';
+    grid-template-columns: 62px minmax(0, 1fr);
+    column-gap: 14px;
+    padding: 18px 0 0;
+    text-align: left;
+  }
+
+  #page-header.full_page + #content-inner #aside-content .avatar-img {
+    align-self: center;
+    width: 62px;
+    height: 62px;
+  }
+
+  #page-header.full_page + #content-inner #aside-content .author-info-name {
+    align-self: end;
+    margin-top: 0;
+    font-size: 1.18rem;
+  }
+
+  #page-header.full_page + #content-inner #aside-content .author-info-description {
+    align-self: start;
+    margin: 4px 0 0;
+    font-size: 0.8rem;
+  }
+
+  #page-header.full_page + #content-inner #aside-content .site-data {
+    margin-top: 16px;
+    padding: 14px 0 16px;
+    border-top: 1px solid var(--editorial-line);
+    border-left: 0;
   }
 
   #recent-posts::before {
     margin-bottom: 20px;
-    padding: 10px 14px;
-    font-size: 1.15rem;
+    font-size: 1.72rem;
   }
 
   #recent-posts .recent-post-items {
@@ -766,17 +891,17 @@ h6,
   #recent-posts .recent-post-items > .recent-post-item:first-child,
   #recent-posts .recent-post-items > .recent-post-item:nth-child(2) {
     margin-bottom: 18px;
-    height: 430px;
+    height: 390px;
   }
 
   #recent-posts .recent-post-item > .recent-post-info {
-    padding: 28px 24px;
+    padding: 24px 22px;
   }
 
   #recent-posts .recent-post-item > .recent-post-info > .article-title,
   #recent-posts .recent-post-item:first-child > .recent-post-info > .article-title {
-    max-width: 86%;
-    font-size: 1.7rem;
+    max-width: 84%;
+    font-size: 1.48rem;
   }
 
   #recent-posts .recent-post-item > .recent-post-info > .content {
@@ -863,8 +988,13 @@ h6,
 @media (prefers-reduced-motion: reduce) {
   #page-header.full_page #site-info,
   #recent-posts .recent-post-item,
-  #recent-posts .recent-post-item .post-bg {
+  #recent-posts .recent-post-item .post-bg,
+  #page-header.full_page + #content-inner #aside-content .avatar-img img {
     animation: none;
     transition: none;
+  }
+
+  #page-header.full_page + #content-inner #aside-content .avatar-img img:hover {
+    transform: none;
   }
 }

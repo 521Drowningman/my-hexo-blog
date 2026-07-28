@@ -23,3 +23,6 @@ cel-shaded derivatives generated from those source files for this site.
   Wallhaven page: https://wallhaven.cc/w/lyjpmr
   Original artist/source: https://www.pixiv.net/en/users/67750556
   Copyright remains with the original artist.
+
+- avatar-lyjpmr.webp
+  Local square crop derived from hero-lyjpmr.webp for the temporary author avatar.
