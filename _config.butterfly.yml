@@ -150,7 +150,7 @@ post_meta:
 # The position of site info, eg: 300px/300em/300rem/10%
 index_site_info_top: 48%
 # The height of top_img, eg: 300px/300em/300rem
-index_top_img_height: 78vh
+index_top_img_height: 100vh
 
 # The subtitle on homepage
 subtitle:
@@ -334,13 +334,13 @@ aside:
     expand: none
     sort_order:
   card_tags:
-    enable: false
+    enable: true
     # If set 0 will show all
-    limit: 40
+    limit: 8
     color: false
     custom_colors:
     # Order of tags, random/name/length
-    orderby: random
+    orderby: name
     # Sort of order. 1, asc for ascending; -1, desc for descending
     order: 1
     sort_order:
