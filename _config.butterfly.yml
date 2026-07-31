@@ -150,7 +150,7 @@ post_meta:
 # The position of site info, eg: 300px/300em/300rem/10%
 index_site_info_top: 48%
 # The height of top_img, eg: 300px/300em/300rem
-index_top_img_height: 100vh
+index_top_img_height: 88vh
 
 # The subtitle on homepage
 subtitle:
@@ -1080,8 +1080,10 @@ css_prefix: true
 inject:
   head:
     - <link rel="stylesheet" href="/css/custom.css">
+    - <link rel="stylesheet" href="/css/home-motion.css">
+    - <link rel="stylesheet" href="/css/editorial-scenes.css">
   bottom:
-    # - <script src="xxxx"></script>
+    - <script defer src="/js/home-motion.js"></script>
 
 # CDN Settings
 # Don't modify the following settings unless you know how they work
