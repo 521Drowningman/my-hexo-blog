@@ -1,0 +1,65 @@
+# 选读内容集中维护在这里。新增一条 item 就会自动出现在页面上。
+#
+# 公众号文章示例：
+# - title: 文章标题
+#   source: 微信公众号
+#   source_short: WECHAT
+#   category: 观察
+#   tags: [设计, 阅读]
+#   type: LONGFORM
+#   date: 2026-08-05
+#   reading_time: 8 分钟
+#   description: 推荐理由写在这里，控制在两三句话内。
+#   url: https://mp.weixin.qq.com/s/your-article-id
+#   cover: /img/editorial/cover-default-anime-local.webp
+#   accent: red
+
+kicker: "EDITOR'S SHELF / 01"
+title: 把值得读的，放在一起。
+description: 这里收录我愿意转发给朋友的文章、方法和灵感。它们可能来自公众号，也可能来自某个安静但值得反复打开的网页。
+note: 不按热度排序，只按我愿意转发给你的程度。
+edition: SUMMER 2026
+updated: 2026.08.05
+featured_label: 本期主选
+list_label: 继续阅读
+
+items:
+  - title: Hexo 博客自动化部署
+    source: 本站
+    source_short: BLOG
+    category: 工程
+    tags: [Hexo, 自动化, 发布]
+    type: FIELD NOTE
+    date: '2026-07-20'
+    reading_time: 12 分钟
+    description: 从 GitHub Actions 构建 Hexo，到服务器原子发布、健康检查和失败回滚的完整实践。
+    url: /2026/07/20/automated-deployment/
+    cover: /img/editorial/cover-automation-anime-local.webp
+    featured: true
+    accent: yellow
+
+  - title: Hexo 博客从域名到上线的完整部署流程
+    source: 本站
+    source_short: BLOG
+    category: 部署
+    tags: [域名, Nginx, HTTPS]
+    type: PRACTICE
+    date: '2026-07-11'
+    reading_time: 15 分钟
+    description: 从域名解析、备案和 HTTPS，到服务器环境、Nginx 与 Hexo 上线的完整过程记录。
+    url: /2026/07/11/全流程记录/
+    cover: /img/editorial/cover-release-anime-local.webp
+    accent: red
+
+  - title: The Twelve-Factor App
+    source: 网页
+    source_short: WEB
+    category: 工程方法
+    tags: [架构, 方法论, 长青]
+    type: CLASSIC
+    date: 常青
+    reading_time: 15 分钟
+    description: 一份关于构建现代、可维护服务的经典方法论。适合在开始下一次重构前，重新读一遍。
+    url: https://12factor.net/zh_cn/
+    cover: /img/editorial/cover-default-anime-local.webp
+    accent: blue

@@ -1,0 +1,107 @@
+- const readingConfig = site.data && site.data.recommendations ? site.data.recommendations : {}
+- const items = Array.isArray(readingConfig.items) ? readingConfig.items : []
+- const featuredIndex = items.findIndex(item => item.featured)
+- const activeFeaturedIndex = featuredIndex >= 0 ? featuredIndex : 0
+- const featured = items.length ? items[activeFeaturedIndex] : null
+- const listItems = featured ? items.filter((item, index) => index !== activeFeaturedIndex) : []
+- const sourceLabels = [...new Set(items.map(item => item.source).filter(Boolean))]
+- const categoryLabels = [...new Set(items.map(item => item.category).filter(Boolean))]
+
+mixin recommendationCard(item, index, isFeatured)
+  - const tags = Array.isArray(item.tags) ? item.tags : []
+  - const source = item.source || '未分类'
+  - const category = item.category || '选读'
+  - const accent = item.accent || (index % 3 === 0 ? 'yellow' : index % 3 === 1 ? 'red' : 'blue')
+  - const itemFilters = [source, category, ...tags].filter(Boolean).map(value => String(value).toLowerCase()).join('|')
+  - const itemSearch = [item.title, source, category, item.description, ...tags].filter(Boolean).join(' ').toLowerCase()
+  - const itemUrl = item.url || '#'
+  - const isExternal = /^https?:\/\//.test(itemUrl)
+  - const itemLink = isExternal ? itemUrl : url_for(itemUrl)
+  - const cardClass = `${isFeatured ? 'recommendation-card--featured ' : ''}recommendation-card--${accent}`
+  article.recommendation-card(class=cardClass data-recommendation-item='true' data-recommendation-filter=itemFilters data-recommendation-search=itemSearch)
+    .recommendation-card__media
+      if item.cover
+        a.recommendation-card__media-link(href=itemLink target=isExternal ? '_blank' : null rel=isExternal ? 'noopener noreferrer' : null aria-label=`打开：${item.title}`)
+          img(src=url_for(item.cover) alt=item.title loading='lazy')
+      else
+        .recommendation-card__placeholder(aria-hidden='true')
+          span= String(index + 1).padStart(2, '0')
+    .recommendation-card__body
+      .recommendation-card__eyebrow
+        span.recommendation-card__index= String(index + 1).padStart(2, '0')
+        span.recommendation-card__type= item.type || 'READING'
+        span.recommendation-card__source= item.source_short || source
+      h3.recommendation-card__title
+        a(href=itemLink target=isExternal ? '_blank' : null rel=isExternal ? 'noopener noreferrer' : null)= item.title
+      p.recommendation-card__description= item.description
+      .recommendation-card__footer
+        .recommendation-card__meta
+          span= item.date || '常青'
+          if item.reading_time
+            span.recommendation-card__meta-separator /
+            span= item.reading_time
+        a.recommendation-card__cta(href=itemLink target=isExternal ? '_blank' : null rel=isExternal ? 'noopener noreferrer' : null)
+          span= isFeatured ? '阅读这篇' : '打开文章'
+          i.fas.fa-arrow-up-right-from-square(aria-hidden='true')
+
+#recommendations.recommendations-page(data-recommendations='true')
+  .recommendations-intro
+    .recommendations-intro__copy
+      p.recommendations-kicker= readingConfig.kicker || "EDITOR'S SHELF / 01"
+      h2= readingConfig.title || '把值得读的，放在一起。'
+      p.recommendations-intro__description= readingConfig.description || '收录我愿意反复打开，也愿意分享给朋友的内容。'
+    aside.recommendations-intro__note
+      span.recommendations-note__stamp= readingConfig.edition || 'CURATED READING'
+      p= readingConfig.note || '不按热度排序，只按我愿意转发给你的程度。'
+      dl.recommendations-stats
+        div
+          dt 文章
+          dd= String(items.length).padStart(2, '0')
+        div
+          dt 来源
+          dd= String(sourceLabels.length).padStart(2, '0')
+        div
+          dt 更新
+          dd= readingConfig.updated || '—'
+
+  .recommendations-toolbar
+    .recommendations-filters(role='group' aria-label='筛选选读')
+      button.recommendations-filter.is-active(type='button' data-recommendation-filter='all' aria-pressed='true') 全部
+      each source in sourceLabels
+        button.recommendations-filter(type='button' data-recommendation-filter=String(source).toLowerCase() aria-pressed='false')= source
+      each category in categoryLabels
+        button.recommendations-filter(type='button' data-recommendation-filter=String(category).toLowerCase() aria-pressed='false')= category
+    label.recommendations-search
+      i.fas.fa-magnifying-glass(aria-hidden='true')
+      span.sr-only 搜索选读
+      input(type='search' placeholder='搜索标题、来源或关键词' aria-label='搜索标题、来源或关键词' data-recommendation-search-input='true')
+
+  .recommendations-status(aria-live='polite')
+    span.recommendations-status__count(data-recommendation-count='true')= items.length
+    span 篇选读
+    span.recommendations-status__detail= ` / ${readingConfig.list_label || '继续阅读'}`
+
+  if featured
+    section.recommendations-section.recommendations-featured-section
+      .recommendations-section__heading
+        .recommendations-section__label
+          span.recommendations-section__rule
+          span= readingConfig.featured_label || '本期主选'
+        span.recommendations-section__index FEATURED / 01
+      +recommendationCard(featured, activeFeaturedIndex, true)
+
+  if listItems.length
+    section.recommendations-section.recommendations-list-section
+      .recommendations-section__heading
+        .recommendations-section__label
+          span.recommendations-section__rule
+          span= readingConfig.list_label || '继续阅读'
+        span.recommendations-section__index= `INDEX / ${String(listItems.length).padStart(2, '0')}`
+      .recommendations-grid
+        each item, index in listItems
+          +recommendationCard(item, index + 1, false)
+
+  .recommendations-empty(data-recommendation-empty='true' hidden='hidden')
+    span.recommendations-empty__mark 0/0
+    h3 没有找到这篇选读
+    p 换一个关键词，或者回到全部内容。

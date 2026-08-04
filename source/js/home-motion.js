@@ -65,6 +65,7 @@
     else if (document.querySelector('#archive')) pageType = 'archive';
     else if (document.querySelector('.tag-cloud-list')) pageType = 'tags-index';
     else if (document.querySelector('.category-lists')) pageType = 'categories-index';
+    else if (document.querySelector('#recommendations')) pageType = 'recommendations';
     else if (document.querySelector('#tag')) pageType = 'tag-detail';
     else if (document.querySelector('#category')) pageType = 'category-detail';
 
