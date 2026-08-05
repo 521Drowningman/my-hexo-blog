@@ -22,7 +22,7 @@ mixin recommendationCard(item, index, isFeatured)
     .recommendation-card__media
       if item.cover
         a.recommendation-card__media-link(href=itemLink target=isExternal ? '_blank' : null rel=isExternal ? 'noopener noreferrer' : null aria-label=`打开：${item.title}`)
-          img(src=url_for(item.cover) alt=item.title loading='lazy')
+          img(src=url_for(item.cover) onerror=`this.onerror=null;this.src='${url_for(theme.error_img.post_page)}'` alt=item.title loading='lazy')
       else
         .recommendation-card__placeholder(aria-hidden='true')
           span= String(index + 1).padStart(2, '0')

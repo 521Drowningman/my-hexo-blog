@@ -24,31 +24,18 @@ featured_label: 本期主选
 list_label: 继续阅读
 
 items:
-  - title: Hexo 博客自动化部署
-    source: 本站
-    source_short: BLOG
-    category: 工程
-    tags: [Hexo, 自动化, 发布]
-    type: FIELD NOTE
-    date: '2026-07-20'
-    reading_time: 12 分钟
-    description: 从 GitHub Actions 构建 Hexo，到服务器原子发布、健康检查和失败回滚的完整实践。
-    url: /2026/07/20/automated-deployment/
+  - title: AI 不自动带来超级组织
+    source: 微信公众号
+    source_short: 腾讯研究院
+    category: 观察
+    tags: [AI, 组织, 未来工作]
+    type: LONGFORM
+    date: '2026-08-03'
+    reading_time: 18 分钟
+    description: 它没有工牌，也没有组织架构图。但每个人都在里面工作。
+    url: https://mp.weixin.qq.com/s/ZVExav2dpDdcsM6_4VwvWQ
     cover: /img/editorial/cover-automation-anime-local.webp
     featured: true
-    accent: yellow
-
-  - title: Hexo 博客从域名到上线的完整部署流程
-    source: 本站
-    source_short: BLOG
-    category: 部署
-    tags: [域名, Nginx, HTTPS]
-    type: PRACTICE
-    date: '2026-07-11'
-    reading_time: 15 分钟
-    description: 从域名解析、备案和 HTTPS，到服务器环境、Nginx 与 Hexo 上线的完整过程记录。
-    url: /2026/07/11/全流程记录/
-    cover: /img/editorial/cover-release-anime-local.webp
     accent: red
 
   - title: The Twelve-Factor App
