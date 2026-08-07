@@ -11,6 +11,7 @@
     root.dataset.recommendationsReady = 'true';
     const cards = [...root.querySelectorAll('[data-recommendation-item]')];
     const filters = [...root.querySelectorAll('button[data-recommendation-filter]')];
+    const sections = [...root.querySelectorAll('[data-recommendation-section]')];
     const search = root.querySelector('[data-recommendation-search-input]');
     const count = root.querySelector('[data-recommendation-count]');
     const empty = root.querySelector('[data-recommendation-empty]');
@@ -29,6 +30,11 @@
         card.hidden = !isVisible;
         card.classList.toggle('is-filtered-out', !isVisible);
         if (isVisible) visibleCount += 1;
+      });
+
+      sections.forEach(section => {
+        const sectionCards = [...section.querySelectorAll('[data-recommendation-item]')];
+        section.hidden = !sectionCards.some(card => !card.hidden);
       });
 
       filters.forEach(filter => {

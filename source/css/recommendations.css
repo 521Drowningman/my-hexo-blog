@@ -51,6 +51,7 @@ html[data-theme='dark'][data-editorial-page='recommendations'] #body-wrap.page {
 .recommendations-note__stamp,
 .recommendations-status,
 .recommendations-filter,
+.recommendations-filter-group__label,
 .recommendations-search input,
 .recommendations-stats dt,
 .recommendations-stats dd {
@@ -145,8 +146,25 @@ html[data-theme='dark'][data-editorial-page='recommendations'] #body-wrap.page {
 .recommendations-filters {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 22px;
+  align-items: center;
+  gap: 8px 20px;
   min-width: 0;
+}
+
+.recommendations-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-left: 18px;
+  border-left: 1px solid var(--editorial-line);
+}
+
+.recommendations-filter-group__label {
+  flex: 0 0 auto;
+  color: var(--editorial-muted);
+  font-size: 0.58rem;
+  font-weight: 900;
+  line-height: 1;
 }
 
 .recommendations-filter {
@@ -191,6 +209,7 @@ html[data-theme='dark'][data-editorial-page='recommendations'] #body-wrap.page {
 }
 
 .recommendations-search {
+  position: relative;
   display: flex;
   align-items: center;
   min-width: 0;
@@ -222,6 +241,18 @@ html[data-theme='dark'][data-editorial-page='recommendations'] #body-wrap.page {
   opacity: 0.85;
 }
 
+.recommendations-search .sr-only {
+  position: absolute;
+  overflow: hidden;
+  margin: -1px;
+  padding: 0;
+  width: 1px;
+  height: 1px;
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
 .recommendations-status {
   display: flex;
   align-items: baseline;
@@ -246,6 +277,10 @@ html[data-theme='dark'][data-editorial-page='recommendations'] #body-wrap.page {
 
 .recommendations-section {
   margin-top: 32px;
+}
+
+.recommendations-section[hidden] {
+  display: none;
 }
 
 .recommendations-section__heading {
@@ -610,6 +645,12 @@ html[data-theme='dark'][data-editorial-page='recommendations'] #body-wrap.page {
 
   .recommendations-filter {
     flex: 0 0 auto;
+  }
+
+  .recommendations-filter-group {
+    flex: 0 0 auto;
+    gap: 8px;
+    padding-left: 14px;
   }
 
   .recommendations-search {

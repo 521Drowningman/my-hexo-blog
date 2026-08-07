@@ -29,7 +29,7 @@ mixin recommendationCard(item, index, isFeatured)
     .recommendation-card__body
       .recommendation-card__eyebrow
         span.recommendation-card__index= String(index + 1).padStart(2, '0')
-        span.recommendation-card__type= item.type || 'READING'
+        span.recommendation-card__type= item.category || item.type || 'READING'
         span.recommendation-card__source= item.source_short || source
       h3.recommendation-card__title
         a(href=itemLink target=isExternal ? '_blank' : null rel=isExternal ? 'noopener noreferrer' : null)= item.title
@@ -41,7 +41,7 @@ mixin recommendationCard(item, index, isFeatured)
             span.recommendation-card__meta-separator /
             span= item.reading_time
         a.recommendation-card__cta(href=itemLink target=isExternal ? '_blank' : null rel=isExternal ? 'noopener noreferrer' : null)
-          span= isFeatured ? '阅读这篇' : '打开文章'
+          span 阅读文章
           i.fas.fa-arrow-up-right-from-square(aria-hidden='true')
 
 #recommendations.recommendations-page(data-recommendations='true')
@@ -67,10 +67,16 @@ mixin recommendationCard(item, index, isFeatured)
   .recommendations-toolbar
     .recommendations-filters(role='group' aria-label='筛选选读')
       button.recommendations-filter.is-active(type='button' data-recommendation-filter='all' aria-pressed='true') 全部
-      each source in sourceLabels
-        button.recommendations-filter(type='button' data-recommendation-filter=String(source).toLowerCase() aria-pressed='false')= source
-      each category in categoryLabels
-        button.recommendations-filter(type='button' data-recommendation-filter=String(category).toLowerCase() aria-pressed='false')= category
+      if sourceLabels.length
+        .recommendations-filter-group(role='group' aria-label='按来源')
+          span.recommendations-filter-group__label 来源
+          each source in sourceLabels
+            button.recommendations-filter(type='button' data-recommendation-filter=String(source).toLowerCase() aria-pressed='false')= source
+      if categoryLabels.length
+        .recommendations-filter-group(role='group' aria-label='按主题')
+          span.recommendations-filter-group__label 主题
+          each category in categoryLabels
+            button.recommendations-filter(type='button' data-recommendation-filter=String(category).toLowerCase() aria-pressed='false')= category
     label.recommendations-search
       i.fas.fa-magnifying-glass(aria-hidden='true')
       span.sr-only 搜索选读
@@ -82,7 +88,7 @@ mixin recommendationCard(item, index, isFeatured)
     span.recommendations-status__detail= ` / ${readingConfig.list_label || '继续阅读'}`
 
   if featured
-    section.recommendations-section.recommendations-featured-section
+    section.recommendations-section.recommendations-featured-section(data-recommendation-section='true')
       .recommendations-section__heading
         .recommendations-section__label
           span.recommendations-section__rule
@@ -91,7 +97,7 @@ mixin recommendationCard(item, index, isFeatured)
       +recommendationCard(featured, activeFeaturedIndex, true)
 
   if listItems.length
-    section.recommendations-section.recommendations-list-section
+    section.recommendations-section.recommendations-list-section(data-recommendation-section='true')
       .recommendations-section__heading
         .recommendations-section__label
           span.recommendations-section__rule
@@ -103,5 +109,5 @@ mixin recommendationCard(item, index, isFeatured)
 
   .recommendations-empty(data-recommendation-empty='true' hidden='hidden')
     span.recommendations-empty__mark 0/0
-    h3 没有找到这篇选读
-    p 换一个关键词，或者回到全部内容。
+    h3 没有找到匹配的选读
+    p 换一个筛选条件或关键词，继续看看。

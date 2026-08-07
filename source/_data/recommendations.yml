@@ -19,7 +19,7 @@ title: 把值得读的，放在一起。
 description: 这里收录我愿意转发给朋友的文章、方法和灵感。它们可能来自公众号，也可能来自某个安静但值得反复打开的网页。
 note: 不按热度排序，只按我愿意转发给你的程度。
 edition: SUMMER 2026
-updated: 2026.08.05
+updated: 2026.08.07
 featured_label: 本期主选
 list_label: 继续阅读
 
@@ -40,7 +40,7 @@ items:
 
   - title: The Twelve-Factor App
     source: 网页
-    source_short: WEB
+    source_short: 12factor.net
     category: 工程方法
     tags: [架构, 方法论, 长青]
     type: CLASSIC
